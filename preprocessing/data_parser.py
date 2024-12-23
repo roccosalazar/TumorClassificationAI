@@ -1,11 +1,6 @@
 from abc import ABC, abstractmethod
 import pandas as pd
 
-"""
-Questo file contiene un'implementazione di un'interfaccia per i parser di dataset.
-Ogni parser è una classe che implementa il metodo parse, che restituisce un DataFrame pandas.
-"""
-
 class DataParser(ABC):
     """
     Questa classe astratta definisce un'interfaccia comune per i parser di dataset.
@@ -21,7 +16,10 @@ class CsvDataParser(DataParser):
     """
     def parse(self, file_path: str) -> pd.DataFrame:
         print(f"Parsing CSV: {file_path}")
-        return pd.read_csv(file_path)
+        df = pd.read_csv(file_path)
+        # Rimuovere i duplicati basati su 'Sample code number' e impostare come indice
+        df_cleaned = df.drop_duplicates(subset="Sample code number").set_index("Sample code number")
+        return df_cleaned
 
 
 class ExcelDataParser(DataParser):
@@ -30,7 +28,10 @@ class ExcelDataParser(DataParser):
     """
     def parse(self, file_path: str) -> pd.DataFrame:
         print(f"Parsing Excel: {file_path}")
-        return pd.read_excel(file_path)
+        df = pd.read_excel(file_path)
+        # Rimuovere i duplicati basati su 'Sample code number' e impostare come indice
+        df_cleaned = df.drop_duplicates(subset="Sample code number").set_index("Sample code number")
+        return df_cleaned
 
 
 class JsonDataParser(DataParser):
@@ -39,7 +40,10 @@ class JsonDataParser(DataParser):
     """
     def parse(self, file_path: str) -> pd.DataFrame:
         print(f"Parsing JSON: {file_path}")
-        return pd.read_json(file_path)
+        df = pd.read_json(file_path)
+        # Rimuovere i duplicati basati su 'Sample code number' e impostare come indice
+        df_cleaned = df.drop_duplicates(subset="Sample code number").set_index("Sample code number")
+        return df_cleaned
 
 
 class TxtDataParser(DataParser):
@@ -48,7 +52,10 @@ class TxtDataParser(DataParser):
     """
     def parse(self, file_path: str) -> pd.DataFrame:
         print(f"Parsing TXT: {file_path}")
-        return pd.read_csv(file_path, delimiter=',')
+        df = pd.read_csv(file_path, delimiter=',')
+        # Rimuovere i duplicati basati su 'Sample code number' e impostare come indice
+        df_cleaned = df.drop_duplicates(subset="Sample code number").set_index("Sample code number")
+        return df_cleaned
 
 
 class TsvDataParser(DataParser):
@@ -57,7 +64,10 @@ class TsvDataParser(DataParser):
     """
     def parse(self, file_path: str) -> pd.DataFrame:
         print(f"Parsing TSV: {file_path}")
-        return pd.read_csv(file_path, delimiter='\t')
+        df = pd.read_csv(file_path, delimiter='\t')
+        # Rimuovere i duplicati basati su 'Sample code number' e impostare come indice
+        df_cleaned = df.drop_duplicates(subset="Sample code number").set_index("Sample code number")
+        return df_cleaned
 
 
 class ParserFactory:
@@ -78,10 +88,3 @@ class ParserFactory:
             return TsvDataParser()
         else:
             raise RuntimeError("Formato file non supportato")
-
-"""
-Da usare in questo modo:
-parser = ParserFactory.get_parser("version_1.csv")
-df = parser.parse("version_1.csv")
-print(df)
-"""
