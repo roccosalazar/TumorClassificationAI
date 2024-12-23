@@ -1,5 +1,5 @@
 import pandas as pd
-from preprocessing.data_parser import ParserFactory
+from .data_parser import ParserFactory
 
 class MissingValuesHandler:
     """
@@ -22,6 +22,19 @@ class MissingValuesHandler:
             except ValueError:
                 pass
         return data
+
+    @staticmethod
+    def remove_rows_with_missing_classtype(data: pd.DataFrame) -> pd.DataFrame:
+        """
+        Rimuove le righe che hanno un valore mancante nella colonna `classtype_v1`.
+
+        Args:
+            data (pd.DataFrame): Il dataset con possibili valori mancanti nella colonna `classtype_v1`.
+
+        Returns:
+            pd.DataFrame: Dataset senza righe con `classtype_v1` mancante.
+        """
+        return data.dropna(subset=['classtype_v1'])
 
     @staticmethod
     def remove_missing_rows(data: pd.DataFrame) -> pd.DataFrame:
@@ -93,6 +106,9 @@ class MissingValuesFactory:
             pd.DataFrame: Dataset con valori mancanti gestiti.
         """
         data = MissingValuesHandler.convert_numeric_columns(data)
+
+        # Rimuovi righe con classtype_v1 mancante
+        data = MissingValuesHandler.remove_rows_with_missing_classtype(data)
 
         if strategy == 'remove':
             return MissingValuesHandler.remove_missing_rows(data)
