@@ -80,7 +80,7 @@ if __name__ == "__main__":
     file_path = "data/version_1.csv"
     parser = ParserFactory.get_parser(file_path)
     data = parser.parse(file_path)
-    data = MissingValuesFactory.handle_missing_values('median', data)
+    data = MissingValuesStrategyManager.handle_missing_values('median', data)
 
     print("Original Data:")
     print(data.head())
