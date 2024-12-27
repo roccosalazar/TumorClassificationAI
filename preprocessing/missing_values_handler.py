@@ -135,5 +135,5 @@ if __name__ == "__main__":
 
     for strategy in strategies:
         print(f"\nStrategy: {strategy}")
-        processed_data = MissingValuesFactory.handle_missing_values(strategy, data)
+        processed_data = MissingValuesStrategyManager.handle_missing_values(strategy, data)
         print(processed_data.head())

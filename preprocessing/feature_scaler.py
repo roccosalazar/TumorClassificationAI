@@ -93,5 +93,5 @@ if __name__ == "__main__":
 
     for strategy in strategies:
         print(f"\nStrategy: {strategy}")
-        scaled_data = FeatureScalerFactory.scale_features(strategy, data, exclude_columns)
+        scaled_data = FeatureScalerStrategyManager.scale_features(strategy, data, exclude_columns)
         print(scaled_data.head())
