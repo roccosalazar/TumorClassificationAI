@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from .data_parser import ParserFactory
-from .missing_values_handler import MissingValuesFactory
+from .missing_values_handler import MissingValuesStrategyManager
 
 class FeatureScaler:
     """
