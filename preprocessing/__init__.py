@@ -1,3 +1,3 @@
 from .data_parser import ParserFactory
-from .feature_scaler import FeatureScalerFactory
-from .missing_values_handler import MissingValuesFactory
+from .feature_scaler import FeatureScalerStrategyManager
+from .missing_values_handler import MissingValuesStrategyManager

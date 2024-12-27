@@ -1,5 +1,5 @@
 import pandas as pd
-from preprocessing import ParserFactory, MissingValuesFactory, FeatureScalerFactory
+from preprocessing import ParserFactory, MissingValuesStrategyManager, FeatureScalerStrategyManager
 
 def main():
     # Step 1: Input dell'utente per il percorso del file
@@ -34,7 +34,7 @@ def main():
 
     print(f"Gestione dei valori mancanti con la strategia: {missing_strategy}...")
     try:
-        data = MissingValuesFactory.handle_missing_values(strategy=missing_strategy, data=data)
+        data = MissingValuesStrategyManager.handle_missing_values(strategy=missing_strategy, data=data)
     except Exception as e:
         print(f"Errore durante la gestione dei valori mancanti: {e}. Procedo con i dati originali.")
 
@@ -53,7 +53,7 @@ def main():
     exclude_columns = ['Sample code number', 'classtype_v1']
     print(f"Applicazione dello scaling delle feature con la strategia: {scaling_strategy}...")
     try:
-        scaled_data = FeatureScalerFactory.scale_features(strategy=scaling_strategy, data=data, exclude_columns=exclude_columns)
+        scaled_data = FeatureScalerStrategyManager.scale_features(strategy=scaling_strategy, data=data, exclude_columns=exclude_columns)
     except Exception as e:
         print(f"Errore durante lo scaling delle feature: {e}. Procedo con i dati non scalati.")
         scaled_data = data

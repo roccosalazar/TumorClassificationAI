@@ -89,7 +89,7 @@ class MissingValuesHandler:
         mode = data.mode().iloc[0]
         return data.fillna(mode)
 
-class MissingValuesFactory:
+class MissingValuesStrategyManager:
     """
     Factory per la gestione dinamica dei valori mancanti.
     """

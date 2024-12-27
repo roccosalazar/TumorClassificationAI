@@ -51,7 +51,7 @@ class FeatureScaler:
 
         return data_scaled
 
-class FeatureScalerFactory:
+class FeatureScalerStrategyManager:
     """
     Factory per la gestione dinamica dello scaling delle feature.
     """
