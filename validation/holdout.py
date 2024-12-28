@@ -1,13 +1,8 @@
 from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
+from validation import Validation 
 
-
-# Interfaccia Validation
-class Validation(ABC):
-    @abstractmethod
-    def validate(self, data: pd.DataFrame, target_column: str):
-        pass
 
 # Classe Holdout che implementa Validation
 class Holdout(Validation):
@@ -34,11 +29,11 @@ class Holdout(Validation):
         if self.random_state is not None:
             np.random.seed(self.random_state)  # inizializzazione del generatore di numeri casuali
 
-        shuffled_indices = np.random.permutation(len(df))  # permutazione casuale degli indici del DataFrame
+        shuffled_indices = np.random.permutation(len(pd.DataFrame))  # permutazione casuale degli indici del DataFrame
         test_set_size = int(
-            len(df) * self.test_size)  # arrotondamento per difetto all'intero più vicino della dimensione del test set
+            len(pd.DataFrame) * self.test_size)  # arrotondamento per difetto all'intero più vicino della dimensione del test set
         test_indices = shuffled_indices[:test_set_size]  # selezione degli indici del test set
         train_indices = shuffled_indices[test_set_size:]  # selezione degli indici del training set
 
-        folds.append((df.iloc[train_indices], df.iloc[test_indices]))  # accesso alle righe tramite gli indici di posizione (iloc) selezionati e aggiunta delle tuple alla lista dei folds
+        folds.append((pd.DataFrame.iloc[train_indices], pd.DataFrame.iloc[test_indices]))  # accesso alle righe tramite gli indici di posizione (iloc) selezionati e aggiunta delle tuple alla lista dei folds
         return folds
