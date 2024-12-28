@@ -98,4 +98,3 @@ holdout_validator = Holdout(test_size=0.2, random_state=42, k=3)
 metrics = holdout_validator.validate(data, target_column='Class')
 
 print("Metriche di valutazione:", metrics)
-print("cambiamento")
