@@ -1,48 +1,75 @@
+from abc import ABC, abstractmethod
 import pandas as pd
 import numpy as np
 from knn import KNN  # Importa la classe KNN
 
-def holdout_validation(data, target_column, test_size=0.2, random_state=None, k=3):
-    """
-    Implementa la validazione Holdout per dividere il dataset in training e testing,
-    addestra un classificatore e calcola le metriche di valutazione.
+# Interfaccia Validation
+class Validation(ABC):
+    @abstractmethod
+    def validate(self, data: pd.DataFrame, target_column: str):
+        pass
 
-    Args:
-        data (pd.DataFrame): Il dataset completo.
-        target_column (str): Il nome della colonna target.
-        test_size (float): La proporzione del dataset da usare per il testing.
-        random_state (int): Seed per la riproducibilità.
-        k (int): Numero di vicini per il classificatore k-NN.
+# Classe Holdout che implementa Validation
+class Holdout(Validation):
+    def __init__(self, test_size=0.2, random_state=None, k=3):
+        """
+        Inizializza i parametri per la validazione Holdout.
 
-    Returns:
-        dict: Un dizionario contenente le metriche di valutazione.
-    """
-    # Separazione delle feature e della target
-    X = data.drop(columns=[target_column])
-    y = data[target_column]
+        Args:
+            test_size (float): Proporzione del dataset da usare per il testing.
+            random_state (int): Seed per la riproducibilità.
+            k (int): Numero di vicini per il classificatore k-NN.
+        """
+        self.test_size = test_size
+        self.random_state = random_state
+        self.k = k
 
-    # Shuffle del dataset
-    if random_state is not None:
-        np.random.seed(random_state)
-    shuffled_indices = np.random.permutation(len(data))
+    def validate(self, data: pd.DataFrame, target_column: str):
+        """
+        Esegue la validazione Holdout.
 
-    # Suddivisione in training e testing
-    test_size = int(len(data) * test_size)
-    test_indices = shuffled_indices[:test_size]
-    train_indices = shuffled_indices[test_size:]
+        Args:
+            data (pd.DataFrame): Il dataset completo.
+            target_column (str): Il nome della colonna target.
 
-    X_train, X_test = X.iloc[train_indices], X.iloc[test_indices]
-    y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
+        Returns:
+            dict: Metriche di valutazione.
+        """
+        # Separazione delle feature e della target
+        X = data.drop(columns=[target_column])
+        y = data[target_column]
 
-    # Inizializza e addestra il classificatore k-NN
-    knn = KNN(k=k)
-    knn.fit(X_train, y_train)
-    y_pred = knn.predict(X_test).to_numpy().flatten()
+        # Shuffle del dataset
+        if self.random_state is not None:
+            np.random.seed(self.random_state)
+        shuffled_indices = np.random.permutation(len(data))
 
-    # Calcolo delle metriche di valutazione
-    def calculate_metrics(y_true, y_pred):
+        # Suddivisione in training e testing
+        test_size = int(len(data) * self.test_size)
+        test_indices = shuffled_indices[:test_size]
+        train_indices = shuffled_indices[test_size:]
+
+        X_train, X_test = X.iloc[train_indices], X.iloc[test_indices]
+        y_train, y_test = y.iloc[train_indices], y.iloc[test_indices]
+
+        # Inizializza e addestra il classificatore k-NN
+        knn = KNN(k=self.k)
+        knn.fit(X_train, y_train)
+        y_pred = knn.predict(X_test).to_numpy().flatten()
+
+        # Calcolo delle metriche di valutazione
+        return self.calculate_metrics(y_test.values, y_pred)
+
+    def calculate_metrics(self, y_true, y_pred):
         """
         Calcola metriche di valutazione senza librerie esterne.
+
+        Args:
+            y_true (np.ndarray): Etichette reali.
+            y_pred (np.ndarray): Etichette predette.
+
+        Returns:
+            dict: Metriche calcolate.
         """
         metrics = {}
         metrics['Accuracy'] = (y_true == y_pred).sum() / len(y_true)
@@ -59,10 +86,6 @@ def holdout_validation(data, target_column, test_size=0.2, random_state=None, k=
             metrics['Specificity'] = 'N/A'
         return metrics
 
-    metrics = calculate_metrics(y_test.values, y_pred)
-
-    return metrics
-
 # Esempio di utilizzo con un dataset simulato
 data = pd.DataFrame({
     'Feature1': np.random.rand(100),
@@ -70,5 +93,8 @@ data = pd.DataFrame({
     'Class': np.random.choice([2, 4], size=100)
 })
 
-metrics = holdout_validation(data, target_column='Class', test_size=0.2, random_state=42, k=3)
+# Creazione di un'istanza di Holdout
+holdout_validator = Holdout(test_size=0.2, random_state=42, k=3)
+metrics = holdout_validator.validate(data, target_column='Class')
+
 print("Metriche di valutazione:", metrics)
