@@ -19,21 +19,30 @@ class Holdout(Validation):
 
     def split(self, data: pd.DataFrame):
         """
-        Il metodo split esegue la holdout sul dataset
-        :pd.DataFrame: dataframe da dividere in set di training e test
-        :return: folds: lista di tuple, ognuna delle quali contiene il set di training e il set di test (in questo caso una sola tupla con il set di training e il set di test)
+        Divide il dataset in training e test set secondo la validazione Holdout.
+
+        Args:
+            data (pd.DataFrame): Dataset da dividere.
+
+        Returns:
+            folds: Lista contenente una tupla (training set, test set).
         """
-         # Lista dei folds
+        # Lista dei folds
         folds = []
 
         if self.random_state is not None:
-            np.random.seed(self.random_state)  # inizializzazione del generatore di numeri casuali
+            np.random.seed(self.random_state)
 
-        shuffled_indices = np.random.permutation(len(pd.DataFrame))  # permutazione casuale degli indici del DataFrame
-        test_set_size = int(
-            len(pd.DataFrame) * self.test_size)  # arrotondamento per difetto all'intero più vicino della dimensione del test set
-        test_indices = shuffled_indices[:test_set_size]  # selezione degli indici del test set
-        train_indices = shuffled_indices[test_set_size:]  # selezione degli indici del training set
+        # Permutazione casuale degli indici
+        shuffled_indices = np.random.permutation(len(data))
+        
+        # Calcolo della dimensione del test set
+        test_set_size = int(len(data) * self.test_size)
+        
+        # Divisione degli indici
+        test_indices = shuffled_indices[:test_set_size]
+        train_indices = shuffled_indices[test_set_size:]
 
-        folds.append((pd.DataFrame.iloc[train_indices], pd.DataFrame.iloc[test_indices]))  # accesso alle righe tramite gli indici di posizione (iloc) selezionati e aggiunta delle tuple alla lista dei folds
+        # Creazione dei set e aggiunta alla lista
+        folds.append((data.iloc[train_indices], data.iloc[test_indices]))
         return folds
