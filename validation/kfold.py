@@ -1,13 +1,32 @@
+from abc import ABC, abstractmethod
 import pandas as pd
 import numpy as np
 
-# Definizione della classe KFold
-class KFold:
+
+# Classe astratta Validation
+class Validation(ABC):
+    @abstractmethod
+    def split(self, data: pd.DataFrame):
+        """
+        Metodo astratto per suddividere il dataset in K fold.
+        """
+        pass
+
+
+# Classe KFold che implementa Validation
+class KFold(Validation):
     def __init__(self, n_splits, random_state=None):
+        """
+        Inizializza i parametri per la validazione K-Fold.
+
+        Args:
+            n_splits (int): Numero di fold (divisioni) del dataset.
+            random_state (int): Seed per la riproducibilità.
+        """
         self.n_splits = n_splits
         self.random_state = random_state
 
-    def split(self, data):
+    def split(self, data: pd.DataFrame):
         """
         Divide il dataset in K fold.
 
@@ -15,7 +34,7 @@ class KFold:
             data (pd.DataFrame): Dataset da dividere.
 
         Returns:
-            folds (list): Lista contenente K tuple (training set, test set).
+            list: Lista contenente K tuple (training set, test set).
         """
         if self.random_state is not None:
             np.random.seed(self.random_state)
@@ -38,11 +57,11 @@ class KFold:
             folds.append((train, test))
 
         return folds
-1
+
 
 if __name__ == "__main__":
-    # Interfaccia per configurare il K-Fold
-    print("Benvenuto! Configura la validazione K-Fold:")
+    # Interfaccia per configurare il metodo K-Fold
+    print("Configura la validazione K-Fold:")
 
     # Input per il numero di fold
     while True:
@@ -58,7 +77,7 @@ if __name__ == "__main__":
         except ValueError as e:
             print(f"Errore: {e}. Riprova.")
 
-    # Input per il seed
+    # Input per il random_state
     while True:
         try:
             random_state = input("Inserisci il seed per il mescolamento (default nessun seed): ")
@@ -70,8 +89,7 @@ if __name__ == "__main__":
         except ValueError:
             print("Errore: Il seed deve essere un numero intero. Riprova.")
 
-    # Ora hai n_splits e random_state validi
-    print(f"Configurazione scelta: K={n_splits}, Seed={random_state}")
+    print(f"Configurazione scelta: K={n_splits}, random_state={random_state}")
 
     # Dataset simulato
     data = pd.DataFrame({
@@ -80,13 +98,10 @@ if __name__ == "__main__":
         'Class': np.random.choice([2, 4], size=100)
     })
 
-    # Crea un'istanza di KFold con i valori già validati
+    # Creazione e uso del K-Fold
     kfold = KFold(n_splits=n_splits, random_state=random_state)
-
-    # Divide il dataset in fold
     folds = kfold.split(data)
 
-    # Stampa i risultati
     print("\nSuddivisione completata! Ecco le dimensioni di ciascun fold:")
     for i, (train, test) in enumerate(folds):
         print(f"Fold {i + 1}: Training Set -> {len(train)} righe, Test Set -> {len(test)} righe")
