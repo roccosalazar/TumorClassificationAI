@@ -1,8 +1,21 @@
+from abc import ABC, abstractmethod
 import pandas as pd
 import numpy as np
 
-# Classe Holdout
-class Holdout:
+
+
+# Classe astratta Validation
+class Validation(ABC):
+    @abstractmethod
+    def split(self, data: pd.DataFrame):
+        """
+        Metodo astratto per suddividere il dataset in training e test set.
+        """
+        pass
+
+
+# Classe Holdout che implementa Validation
+class Holdout(Validation):
     def __init__(self, test_size, random_state=None):
         """
         Inizializza i parametri per la validazione Holdout.
