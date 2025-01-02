@@ -1,5 +1,8 @@
+
+from abc import ABC, abstractmethod
 import pandas as pd
 from preprocessing import ParserFactory, MissingValuesStrategyManager, FeatureScalerStrategyManager
+from validation import Holdout, KFold  # Importa le classi implementate
 
 def main():
     # Step 1: Input dell'utente per il percorso del file
@@ -61,8 +64,42 @@ def main():
     print("Dati dopo lo scaling delle feature:")
     print(scaled_data.head())
 
-    # A questo punto, il dataset è stato preprocessato.
-    # I passaggi successivi includono la scelta tra Hold-Out o K-Fold Cross Validation.
+    # Step 4: Scelta della Validazione
+    print("\nScegli il metodo di validazione:")
+    print("1. Holdout")
+    print("2. K-Fold")
+    validation_choice = input("Inserisci il numero del metodo di validazione: ").strip()
+
+    if validation_choice == "1":
+        # Configurazione Holdout
+        print("\nConfigura la validazione Holdout:")
+        test_size = float(input("Inserisci la proporzione per il test set (tra 0.1 e 0.5, default 0.2): ") or 0.2)
+        random_state = input("Inserisci il seed per il mescolamento (default nessun seed): ")
+        random_state = int(random_state) if random_state else None
+
+        print(f"Configurazione scelta: test_size={test_size}, random_state={random_state}")
+        holdout = Holdout(test_size=test_size, random_state=random_state)
+        train, test = holdout.split(scaled_data)
+        print(f"\nHoldout: Training Set -> {len(train)} righe, Test Set -> {len(test)} righe")
+
+    elif validation_choice == "2":
+        # Configurazione K-Fold
+        print("\nConfigura la validazione K-Fold:")
+        n_splits = int(input("Inserisci il numero di fold (min 2, default 5): ") or 5)
+        random_state = input("Inserisci il seed per il mescolamento (default nessun seed): ")
+        random_state = int(random_state) if random_state else None
+
+        print(f"Configurazione scelta: K={n_splits}, random_state={random_state}")
+        kfold = KFold(n_splits=n_splits, random_state=random_state)
+        folds = kfold.split(scaled_data)
+
+        print("\nSuddivisione completata! Ecco le dimensioni di ciascun fold:")
+        for i, (train, test) in enumerate(folds):
+            print(f"Fold {i + 1}: Training Set -> {len(train)} righe, Test Set -> {len(test)} righe")
+
+    else:
+        print("Scelta non valida. Nessuna validazione eseguita.")
 
 if __name__ == "__main__":
     main()
+
