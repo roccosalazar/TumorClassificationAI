@@ -101,5 +101,5 @@ def main():
         print("Scelta non valida. Nessuna validazione eseguita.")
 
 if __name__ == "__main__":
-    main()
+    main()  
 
