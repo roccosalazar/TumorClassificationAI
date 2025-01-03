@@ -8,7 +8,7 @@ class HoldoutValidation(Validation):
         self.test_size = test_size
         self.random_state = random_state
 
-    def split(self, data: pd.DataFrame, target_column: str):
+    def split(self, data: pd.DataFrame, target_column: str) -> tuple: # Va modificato il tipo di ritorno in lista
         """
         Suddivide il dataset in training e test set.
         """
@@ -22,7 +22,7 @@ class HoldoutValidation(Validation):
         
         return data.iloc[train_indices], data.iloc[test_indices]
 
-    def evaluate(self, model, data: pd.DataFrame, target_column: str):
+    def evaluate(self, model, data: pd.DataFrame, target_column: str) -> float:
         """
         Valuta il modello usando Holdout.
         """

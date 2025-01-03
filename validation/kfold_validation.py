@@ -7,7 +7,7 @@ class KFoldValidation(Validation):
         self.k = k
         self.random_state = random_state
 
-    def split(self, data: pd.DataFrame, target_column: str):
+    def split(self, data: pd.DataFrame, target_column: str) -> list:
         """
         Suddivide il dataset in K fold per cross-validation.
         """
@@ -27,7 +27,7 @@ class KFoldValidation(Validation):
         
         return folds
 
-    def evaluate(self, model, data: pd.DataFrame, target_column: str):
+    def evaluate(self, model, data: pd.DataFrame, target_column: str) -> float:
         """
         Valuta il modello usando K-Fold Cross-Validation.
         """
