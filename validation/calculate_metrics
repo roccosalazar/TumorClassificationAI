@@ -55,14 +55,26 @@ class MetricsCalculator:
         elif self.method == "kfold":
             # Più coppie di array
             metrics_list = []
+            total_tp = 0
+            total_fn = 0
+
             for y_real, y_pred in self.input_data:
-                metrics_list.append(self._calculate_metrics(y_real, y_pred))
+                metrics = self._calculate_metrics(y_real, y_pred)
+                metrics_list.append(metrics)
+
+                # Accumula TP e FN per calcolo globale della Sensitivity
+                total_tp += np.sum((y_real == 1) & (y_pred == 1))
+                total_fn += np.sum((y_real == 1) & (y_pred == 0))
 
             # Aggrega le metriche
             aggregated_metrics = {
                 metric: np.mean([m[metric] for m in metrics_list])
                 for metric in metrics_list[0]
             }
+
+            # Calcola la Sensitivity aggregata
+            aggregated_metrics["Sensitivity"] = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0
+
             return aggregated_metrics
 
         else:
@@ -102,7 +114,7 @@ class TestMetricsCalculator(unittest.TestCase):
         metrics = calculator.calculate_metrics()
         self.assertAlmostEqual(metrics["Accuracy"], 0.8333333333333333)
         self.assertAlmostEqual(metrics["Error Rate"], 0.16666666666666669)
-        self.assertAlmostEqual(metrics["Sensitivity"], 0.8333333333333333)
+        self.assertAlmostEqual(metrics["Sensitivity"], 0.75)
 
 if __name__ == "__main__":
     unittest.main()
