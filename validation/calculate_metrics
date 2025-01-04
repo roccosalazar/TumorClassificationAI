@@ -8,7 +8,7 @@ class MetricsCalculator:
 
         Args:
             input_data: Una matrice contenente gli array numpy di y_real e y_pred.
-            method (str): Metodo di validazione ("holdout" o "kfold").
+            method (str): Metodo di validazione ("holdout" o "Leave-p-out Cross Validation").
         """
         self.input_data = input_data
         self.method = method
@@ -43,7 +43,7 @@ class MetricsCalculator:
             y_real, y_pred = self.input_data[0]
             return self._calculate_metrics(y_real, y_pred)
 
-        elif self.method == "kfold":
+        elif self.method == "Leave-p-out Cross Validation":
             metrics_list = []
             total_tp = 0
             total_fn = 0
@@ -63,7 +63,7 @@ class MetricsCalculator:
             return aggregated_metrics
 
         else:
-            raise ValueError("Metodo non supportato. Usa 'holdout' o 'kfold'.")
+            raise ValueError("Metodo non supportato. Usa 'holdout' o 'Leave-p-out Cross Validation'.")
 
 class TestMetricsCalculator(unittest.TestCase):
     def test_holdout_accuracy(self):
@@ -90,12 +90,12 @@ class TestMetricsCalculator(unittest.TestCase):
         metrics = calculator.calculate_metrics()
         self.assertAlmostEqual(metrics["Sensitivity"], 0.6666666666666666)
 
-    def test_kfold_aggregation(self):
+    def test_LeavePoutCrossValidation_aggregation(self):
         input_data = [
             (np.array([1, 0, 1]), np.array([1, 0, 1])),
             (np.array([1, 1, 0]), np.array([1, 0, 0]))
         ]
-        calculator = MetricsCalculator(input_data, method="kfold")
+        calculator = MetricsCalculator(input_data, method="Leave-p-out Cross Validation")
         metrics = calculator.calculate_metrics()
         self.assertAlmostEqual(metrics["Accuracy"], 0.8333333333333333)
         self.assertAlmostEqual(metrics["Error Rate"], 0.16666666666666669)
