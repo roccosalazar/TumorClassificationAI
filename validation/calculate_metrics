@@ -8,35 +8,27 @@ class MetricsCalculator:
 
         Args:
             input_data: Una matrice contenente gli array numpy di y_real e y_pred.
-            method (str): Metodo di validazione ("holdout" o "Leave-p-out Cross Validation").
+            method (str): Metodo di validazione ("holdout" o "kfold").
         """
         self.input_data = input_data
         self.method = method
 
     def accuracy(self, y_real, y_pred):
-        """
-        Calcola il tasso di accuratezza.
-        """
+        """Calcola il tasso di accuratezza."""
         return np.mean(y_real == y_pred)
 
     def error_rate(self, y_real, y_pred):
-        """
-        Calcola il tasso di errore.
-        """
+        """Calcola il tasso di errore."""
         return 1 - self.accuracy(y_real, y_pred)
 
     def sensitivity(self, y_real, y_pred):
-        """
-        Calcola la sensibilità (recall per la classe positiva).
-        """
+        """Calcola la sensibilità (recall per la classe positiva)."""
         TP = np.sum((y_real == 1) & (y_pred == 1))
         FN = np.sum((y_real == 1) & (y_pred == 0))
         return TP / (TP + FN) if (TP + FN) > 0 else 0
 
     def _calculate_metrics(self, y_real, y_pred):
-        """
-        Calcola le metriche per una singola coppia di array.
-        """
+        """Calcola le metriche per una singola coppia di array."""
         return {
             "Accuracy": self.accuracy(y_real, y_pred),
             "Error Rate": self.error_rate(y_real, y_pred),
@@ -48,12 +40,10 @@ class MetricsCalculator:
         Calcola le metriche in base al metodo di validazione.
         """
         if self.method == "holdout":
-            # Singola coppia di array
             y_real, y_pred = self.input_data[0]
             return self._calculate_metrics(y_real, y_pred)
 
-        elif self.method == "Leave-p-out Cross Validation":
-            # Più coppie di array
+        elif self.method == "kfold":
             metrics_list = []
             total_tp = 0
             total_fn = 0
@@ -61,24 +51,19 @@ class MetricsCalculator:
             for y_real, y_pred in self.input_data:
                 metrics = self._calculate_metrics(y_real, y_pred)
                 metrics_list.append(metrics)
-
-                # Accumula TP e FN per calcolo globale della Sensitivity
                 total_tp += np.sum((y_real == 1) & (y_pred == 1))
                 total_fn += np.sum((y_real == 1) & (y_pred == 0))
 
-            # Aggrega le metriche
             aggregated_metrics = {
                 metric: np.mean([m[metric] for m in metrics_list])
                 for metric in metrics_list[0]
             }
-
-            # Calcola la Sensitivity aggregata
             aggregated_metrics["Sensitivity"] = total_tp / (total_tp + total_fn) if (total_tp + total_fn) > 0 else 0
 
             return aggregated_metrics
 
         else:
-            raise ValueError("Metodo non supportato. Usa 'holdout' o 'Leave-p-out Cross Validation'.")
+            raise ValueError("Metodo non supportato. Usa 'holdout' o 'kfold'.")
 
 class TestMetricsCalculator(unittest.TestCase):
     def test_holdout_accuracy(self):
@@ -105,7 +90,7 @@ class TestMetricsCalculator(unittest.TestCase):
         metrics = calculator.calculate_metrics()
         self.assertAlmostEqual(metrics["Sensitivity"], 0.6666666666666666)
 
-    def test_LeavePoutCrossValidation_aggregation(self):
+    def test_kfold_aggregation(self):
         input_data = [
             (np.array([1, 0, 1]), np.array([1, 0, 1])),
             (np.array([1, 1, 0]), np.array([1, 0, 0]))
