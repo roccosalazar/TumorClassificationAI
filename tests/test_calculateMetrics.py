@@ -29,6 +29,31 @@ class TestMetricsCalculator(unittest.TestCase):
         metrics = calculator.calculate_metrics()
         self.assertAlmostEqual(metrics["Sensitivity"], 0.6666666666666666)
 
+    def test_holdout_specificity(self):
+        y_real = np.array([1, 0, 1, 1, 0])
+        y_pred = np.array([1, 0, 1, 0, 0])
+        input_data = [(y_real, y_pred)]
+        calculator = MetricsCalculator(input_data, method="holdout")
+        metrics = calculator.calculate_metrics()
+        self.assertAlmostEqual(metrics["Specificity"], 1.0)
+
+    def test_holdout_geometricmean(self):
+        y_real = np.array([1, 0, 1, 1, 0])
+        y_pred = np.array([1, 0, 1, 0, 0])
+        input_data = [(y_real, y_pred)]
+        calculator = MetricsCalculator(input_data, method="holdout")
+        metrics = calculator.calculate_metrics()
+        self.assertAlmostEqual(metrics["Geometric Mean"],0.8165)
+    
+    def test_holdout_AUC(self):
+        y_real = np.array([1, 0, 1, 1, 0])
+        y_pred = np.array([1, 0, 1, 0, 0])
+        input_data = [(y_real, y_pred)]
+        calculator = MetricsCalculator(input_data, method="holdout")
+        metrics = calculator.calculate_metrics()
+        self.assertAlmostEqual(metrics["AUC"], 1.0)
+
+
     def test_LeavePoutCrossValidation_aggregation(self):
     # Genera una matrice 20x2 con coppie di liste di etichette di lunghezza 10
         np.random.seed(42)
@@ -48,10 +73,13 @@ class TestMetricsCalculator(unittest.TestCase):
         print(metrics)
 
     # Verifica valori calcolati (adatta secondo i risultati attesi)
-    # Nota: qui Accuracy, Error Rate, e Sensitivity sono placeholder e dipendono dall'input generato.
+    # Nota: qui Accuracy, Error Rate, e Sensitivity, Specificity, Geometric Mean, AUC sono placeholder e dipendono dall'input generato.
         #self.assertAlmostEqual(metrics["Accuracy"], 0.5, places=2)  # Cambia con il valore atteso
         #self.assertAlmostEqual(metrics["Error Rate"], 0.5, places=2)  # Cambia con il valore atteso
         #self.assertAlmostEqual(metrics["Sensitivity"], 0.5, places=2)  # Cambia con il valore atteso
+        #self.assertAlmostEqual(metrics["Specificity"], 0.5, places=2)  # Cambia con il valore atteso
+        #self.assertAlmostEqual(metrics["Geometric Mean"], 0.5, places=2)  # Cambia con il valore atteso
+        #self.assertAlmostEqual(metrics["AUC"], 0.5, places=2)  # Cambia con il valore atteso
 
 
         if __name__ == "__main__":
