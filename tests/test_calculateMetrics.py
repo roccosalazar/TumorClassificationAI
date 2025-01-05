@@ -1,6 +1,7 @@
 import numpy as np
 import unittest
-from validation.metrics_calculator import MetricsCalculator
+from validation import MetricsCalculator
+
 
 
 class TestMetricsCalculator(unittest.TestCase):
