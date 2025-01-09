@@ -2,6 +2,7 @@ import pandas as pd
 from preprocessing import ParserFactory, MissingValuesStrategyManager, FeatureScalerStrategyManager
 from models import KNNClassifier
 from validation import Holdout, RandomSubsampling, LeavePOutCV
+from metrics import PerformanceMetricsVisualizer
 
 def main():
     # Step 1: Input dell'utente per il percorso del file
@@ -113,7 +114,28 @@ def main():
     # Generazione delle divisioni
     print(f"Generazione delle divisioni utilizzando la strategia: {strategy.__class__.__name__}...")
     validation_data = strategy.generate_splits(features, labels)
-    
+
+        # Mappa i valori di 2 -> 0 (negativo) e 4 -> 1 (positivo)
+    mapped_validation_data = [
+        (
+            [1 if x == 4 else 0 for x in y_real],  # Mappa y_real
+            [1 if x == 4 else 0 for x in y_pred]   # Mappa y_pred
+        )
+        for y_real, y_pred in validation_data  # Applica la trasformazione a ogni coppia
+    ]
+
+    # Verifica i dati trasformati
+    print("Validation Data Originale:", validation_data)
+    print("Validation Data Binaria:", mapped_validation_data)
+
+    # Creazione dell'oggetto PerformanceMetricsVisualizer
+    visualizer = PerformanceMetricsVisualizer(mapped_validation_data)
+
+    # Calcolo e visualizzazione delle metriche
+    visualizer.visualize_metrics()
+
+    # Salvataggio delle metriche in un file Excel
+    visualizer.save("metrics_output.xlsx")
 
 if __name__ == "__main__":
     main()  
