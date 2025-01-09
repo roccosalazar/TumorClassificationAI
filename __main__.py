@@ -103,7 +103,7 @@ def main():
             strategy = LeavePOutCV(p=p)
 
         else:  # Scelta non valida
-            print("Scelta non valida. Uso Holdout come default.")
+            print("Scelta non valida. Uso Holdout come default con percentuale di test: 0.2.")
             strategy = Holdout(test_size=0.2)
 
     except ValueError as e:
