@@ -1,3 +1,4 @@
+import random
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -11,7 +12,7 @@ class KNNClassifier:
         self.data = None
         self.labels = None
 
-    def fit(self, data: pd.DataFrame, labels: pd.Series):
+    def fit(self, data: pd.DataFrame, labels: pd.Series) -> None:
         """
         Memorizza i dati di training e le rispettive etichette.
 
@@ -27,7 +28,7 @@ class KNNClassifier:
         self.data = data
         self.labels = labels
 
-    def predict(self, point: pd.Series) -> any:
+    def predict(self, point: pd.Series) -> int:
         """
         Classifica un singolo punto utilizzando i dati di training.
 
@@ -52,8 +53,18 @@ class KNNClassifier:
         # Determinazione della classe più frequente
         nearest_labels = self.labels.loc[nearest_neighbors]
         label_count = Counter(nearest_labels)
-        most_common = label_count.most_common(1)
-        return most_common[0][0]
+        most_common = label_count.most_common()
+        max_count = most_common[0][1]  # Frequenza più alta
+
+        # Gestione del caso di pareggio
+        tied_classes = [label for label, count in most_common if count == max_count]
+        if len(tied_classes) > 1:
+            # Scegli una classe casualmente in caso di pareggio
+            return random.choice(tied_classes)
+        else:
+            # Restituisci la classe più comune
+            return tied_classes[0]
+
 
     def predict_batch(self, points: pd.DataFrame) -> pd.Series:
         """

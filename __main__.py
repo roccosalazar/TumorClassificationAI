@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
 import pandas as pd
 from preprocessing import ParserFactory, MissingValuesStrategyManager, FeatureScalerStrategyManager
-from validation import Holdout, KFold  # Importa le classi implementate
+from models import KNNClassifier
+from validation import Holdout, RandomSubsampling, LeavePOutCV
 
 def main():
     # Step 1: Input dell'utente per il percorso del file
@@ -63,41 +63,57 @@ def main():
     print("Dati dopo lo scaling delle feature:")
     print(scaled_data.head())
 
-    # Step 4: Scelta della Validazione
-    print("\nScegli il metodo di validazione:")
+        # Separazione delle feature e delle etichette
+    labels_column = 'classtype_v1'  # Sostituisci con il nome corretto della colonna delle etichette
+    if labels_column not in scaled_data.columns:
+        print(f"La colonna delle etichette '{labels_column}' non è presente nel dataset. Termino l'esecuzione.")
+        return
+
+    labels = scaled_data[labels_column]
+    features = scaled_data.drop(columns=exclude_columns, errors='ignore')
+
+    # Step 4: Scelta della strategia di validazione
+    print("Scegli la strategia di validazione:")
     print("1. Holdout")
-    print("2. K-Fold")
-    validation_choice = input("Inserisci il numero del metodo di validazione: ").strip()
+    print("2. Random Subsampling")
+    print("3. Leave-p-Out Cross Validation")
+    choice = input("Inserisci la tua scelta (1/2/3): ").strip()
 
-    if validation_choice == "1":
-        # Configurazione Holdout
-        print("\nConfigura la validazione Holdout:")
-        test_size = float(input("Inserisci la proporzione per il test set (tra 0.1 e 0.5, default 0.2): ") or 0.2)
-        random_state = input("Inserisci il seed per il mescolamento (default nessun seed): ")
-        random_state = int(random_state) if random_state else None
+    strategy = None
 
-        print(f"Configurazione scelta: test_size={test_size}, random_state={random_state}")
-        holdout = Holdout(test_size=test_size, random_state=random_state)
-        train, test = holdout.split(scaled_data)
-        print(f"\nHoldout: Training Set -> {len(train)} righe, Test Set -> {len(test)} righe")
+    try:
+        if choice == '1':  # Holdout
+            test_size = input("Inserisci la percentuale di test (default 0.2): ").strip()
+            test_size = float(test_size) if test_size else 0.2
+            strategy = Holdout(test_size=test_size)
 
-    elif validation_choice == "2":
-        # Configurazione K-Fold
-        print("\nConfigura la validazione K-Fold:")
-        n_splits = int(input("Inserisci il numero di fold (min 2, default 5): ") or 5)
-        random_state = input("Inserisci il seed per il mescolamento (default nessun seed): ")
-        random_state = int(random_state) if random_state else None
+        elif choice == '2':  # Random Subsampling
+            n_iter = input("Inserisci il numero di iterazioni (default 10): ").strip()
+            n_iter = int(n_iter) if n_iter else 10
 
-        print(f"Configurazione scelta: K={n_splits}, random_state={random_state}")
-        kfold = KFold(n_splits=n_splits, random_state=random_state)
-        folds = kfold.split(scaled_data)
+            test_size = input("Inserisci la percentuale di test (default 0.2): ").strip()
+            test_size = float(test_size) if test_size else 0.2
 
-        print("\nSuddivisione completata! Ecco le dimensioni di ciascun fold:")
-        for i, (train, test) in enumerate(folds):
-            print(f"Fold {i + 1}: Training Set -> {len(train)} righe, Test Set -> {len(test)} righe")
+            strategy = RandomSubsampling(n_iter=n_iter, test_size=test_size)
 
-    else:
-        print("Scelta non valida. Nessuna validazione eseguita.")
+        elif choice == '3':  # Leave-p-Out Cross Validation
+            p = input("Inserisci il numero di campioni da lasciare fuori (default 2): ").strip()
+            p = int(p) if p else 2
+
+            strategy = LeavePOutCV(p=p)
+
+        else:  # Scelta non valida
+            print("Scelta non valida. Uso Holdout come default.")
+            strategy = Holdout(test_size=0.2)
+
+    except ValueError as e:
+        print(f"Errore nei parametri di validazione: {e}")
+        exit()
+
+    # Generazione delle divisioni
+    print(f"Generazione delle divisioni utilizzando la strategia: {strategy.__class__.__name__}...")
+    validation_data = strategy.generate_splits(features, labels)
+    
 
 if __name__ == "__main__":
     main()  

@@ -1,4 +1,3 @@
-# from .holdout import HoldOutValidation
-from .kfold_validation import KFoldValidation
-from .holdout_validation import HoldoutValidation
-from .metrics_calculator import MetricsCalculator
+from .holdout import Holdout
+from .leave_p_out_cv import LeavePOutCV
+from .random_subsampling import RandomSubsampling

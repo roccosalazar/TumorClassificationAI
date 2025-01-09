@@ -1,99 +1,44 @@
-from abc import ABC, abstractmethod
-import pandas as pd
 import numpy as np
+import pandas as pd
+from models.knn import KNNClassifier
+from .validation_strategy import ValidationStrategy
 
-
-
-# Classe astratta Validation
-class Validation(ABC):
-    @abstractmethod
-    def split(self, data: pd.DataFrame):
+class Holdout(ValidationStrategy):
+    def __init__(self, test_size=0.2):
         """
-        Metodo astratto per suddividere il dataset in training e test set.
-        """
-        pass
-
-
-# Classe Holdout che implementa Validation
-class Holdout(Validation):
-    def __init__(self, test_size, random_state=None):
-        """
-        Inizializza i parametri per la validazione Holdout.
+        Inizializza la strategia Holdout con una dimensione del set di test.
 
         Args:
-            test_size (float): Proporzione del dataset da usare per il testing.
-            random_state (int): Seed per la riproducibilità.
+            test_size (float): Percentuale del dataset da utilizzare come test (default 0.2).
         """
+        if not (0 < test_size <= 1):
+            raise ValueError("test_size deve essere compreso tra 0 e 1.")
         self.test_size = test_size
-        self.random_state = random_state
 
-    def split(self, data: pd.DataFrame):
+    def generate_splits(self, data: pd.DataFrame, labels: pd.Series) -> list[tuple[list[int], list[int]]]:
         """
-        Divide il dataset in training e test set.
-
-        Args:
-            data (pd.DataFrame): Dataset completo.
-
-        Returns:
-            tuple: Training set e test set.
+        Divide il dataset in set di training e test e restituisce una lista di tuple (y_real, y_pred).
         """
-        if self.random_state is not None:
-            np.random.seed(self.random_state)
-        shuffled_indices = np.random.permutation(len(data))  # Mescola gli indici
-
-        test_set_size = int(len(data) * self.test_size)  # Dimensione del test set
-        test_indices = shuffled_indices[:test_set_size]
-        train_indices = shuffled_indices[test_set_size:]
-
-        train = data.iloc[train_indices]
-        test = data.iloc[test_indices]
-
-        return train, test
-
-
-if __name__ == "__main__":
-    # Interfaccia per configurare il metodo Holdout
-    print("Configura la validazione Holdout:")
-
-    # Input per il test_size
-    while True:
-        try:
-            test_size = input("Inserisci la proporzione per il test set (tra 0.1 e 0.5, default 0.2): ")
-            if not test_size:  # Se l'utente non inserisce nulla
-                test_size = 0.2  # Assegna il valore di default
-            else:
-                test_size = float(test_size)
-                if not (0.1 <= test_size <= 0.5):
-                    raise ValueError("La proporzione deve essere tra 0.1 e 0.5.")
-            break  # Esci dal ciclo se il valore è valido
-        except ValueError as e:
-            print(f"Errore: {e}. Riprova.")
-
-    # Input per il random_state
-    while True:
-        try:
-            random_state = input("Inserisci il seed per il mescolamento (default nessun seed): ")
-            if not random_state:  # Se l'utente non inserisce nulla
-                random_state = None  # Assegna il valore di default
-            else:
-                random_state = int(random_state)
-            break  # Esci dal ciclo se il valore è valido
-        except ValueError:
-            print("Errore: Il seed deve essere un numero intero. Riprova.")
-
-    print(f"Configurazione scelta: test_size={test_size}, random_state={random_state}")
-
-    # Dataset simulato
-    data = pd.DataFrame({
-        'Feature1': np.random.rand(100),
-        'Feature2': np.random.rand(100),
-        'Class': np.random.choice([2, 4], size=100)
-    })
-
-    # Creazione e uso dell'Holdout
-    holdout = Holdout(test_size=test_size, random_state=random_state)
-    train, test = holdout.split(data)
-
-    print(f"\nDataset diviso in training e test set:")
-    print(f"Training Set: {len(train)} righe")
-    print(f"Test Set: {len(test)} righe")
+        n_samples = len(data)
+        n_test = int(n_samples * self.test_size)
+        if n_test == n_samples:
+            raise ValueError("Il set di training è vuoto. Riduci il valore di test_size.")
+        
+        # Shuffle del dataset
+        shuffled_indices = np.random.permutation(n_samples)
+        test_indices = shuffled_indices[:n_test]
+        train_indices = shuffled_indices[n_test:]
+        
+        # Split
+        train_data, test_data = data.iloc[train_indices], data.iloc[test_indices]
+        train_labels, test_labels = labels.iloc[train_indices], labels.iloc[test_indices]
+        
+        # Addestramento e predizione
+        knn = KNNClassifier(k=3)
+        knn.fit(train_data, train_labels)
+        predictions = knn.predict_batch(test_data)
+        
+        # Costruisce la lista di tuple (y_real, y_pred)
+        results = [(test_labels.tolist(), predictions.tolist())]
+        
+        return results
