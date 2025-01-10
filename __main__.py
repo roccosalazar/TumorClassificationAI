@@ -4,6 +4,26 @@ from models import KNNClassifier
 from validation import Holdout, RandomSubsampling, LeavePOutCV
 from metrics import PerformanceMetricsVisualizer
 
+def map_validation_data(validation_data):
+    """
+    Trasforma validation_data mappando i valori 2 -> 0 (negativo) e 4 -> 1 (positivo).
+
+    Args:
+        validation_data (list of tuples): Una lista di tuple, dove ogni tupla contiene due liste
+                                          ([y_real], [y_pred]).
+
+    Returns:
+        list of tuples: Una nuova lista con i valori mappati.
+    """
+    mapped_validation_data = [
+        (
+            [1 if x == 4 else 0 for x in y_real],  # Mappa y_real
+            [1 if x == 4 else 0 for x in y_pred]   # Mappa y_pred
+        )
+        for y_real, y_pred in validation_data  # Applica la trasformazione a ogni coppia
+    ]
+    return mapped_validation_data
+
 def main():
     # Step 1: Input dell'utente per il percorso del file
     file_path = input("Inserisci il percorso del file del dataset che vuoi analizzare: ").strip()
@@ -115,14 +135,8 @@ def main():
     print(f"Generazione delle divisioni utilizzando la strategia: {strategy.__class__.__name__}...")
     validation_data = strategy.generate_splits(features, labels)
 
-        # Mappa i valori di 2 -> 0 (negativo) e 4 -> 1 (positivo)
-    mapped_validation_data = [
-        (
-            [1 if x == 4 else 0 for x in y_real],  # Mappa y_real
-            [1 if x == 4 else 0 for x in y_pred]   # Mappa y_pred
-        )
-        for y_real, y_pred in validation_data  # Applica la trasformazione a ogni coppia
-    ]
+    # Mappa i valori 2 -> 0 e 4 -> 1 per le etichette reali e predette per calcolare le metriche
+    mapped_validation_data = map_validation_data(validation_data)
 
     # Verifica i dati trasformati
     print("Validation Data Originale:", validation_data)
