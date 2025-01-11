@@ -110,12 +110,27 @@ Il programma utilizza il classificatore **k-Nearest Neighbors (k-NN)** per disti
    - Le predizioni vengono confrontate con le etichette reali per calcolare le metriche di performance.
 
 4. **Calcolo delle Metriche**
-     - `Accuracy Rate`: Percentuale di predizioni corrette rispetto al totale.
-     - `Error Rate`: Percentuale di predizioni errate rispetto al totale.
-     - `Sensitivity`: Capacità del modello di identificare correttamente i casi positivi.
-     - `Specificity`: Capacità del modello di identificare correttamente i casi negativi.
-     - `Geometric Mean`: Misura l'equilibrio tra Sensitivity e Specificity.
-     - `All the above` : Tutte le precedenti.
+   - **Metriche di Valutazione**: Queste opzioni determinano come valutare le prestazioni del modello. Sono disponibili le seguenti metriche:
+### **Metriche Calcolate**
+
+Il progetto utilizza diverse metriche per valutare le prestazioni del modello di classificazione dei tumori. Le metriche disponibili sono:
+
+- **`Accuracy Rate`**: La percentuale di predizioni corrette rispetto al totale. Valore ideale: vicino a 1.
+- **`Error Rate`**: La percentuale di predizioni errate rispetto al totale. Valore ideale: vicino a 0.
+- **`Sensitivity`** (o Recall): La capacità del modello di identificare correttamente i casi positivi (tumori maligni). Valore ideale: vicino a 1.
+  - Formula: `Sensitivity = TP / (TP + FN)` dove:
+    - `TP`: Veri positivi
+    - `FN`: Falsi negativi
+- **`Specificity`**: La capacità del modello di identificare correttamente i casi negativi (tumori benigni). Valore ideale: vicino a 1.
+  - Formula: `Specificity = TN / (TN + FP)` dove:
+    - `TN`: Veri negativi
+    - `FP`: Falsi positivi
+- **`Geometric Mean`**: Una misura dell'equilibrio tra Sensitivity e Specificity. Indica quanto il modello è bilanciato nell'identificazione delle due classi.
+  - Formula: `Geometric Mean = √(Sensitivity × Specificity)`
+- **`All the above`**: Opzione per calcolare e visualizzare tutte le metriche sopra elencate in una sola analisi.
+
+Queste metriche forniscono una valutazione completa delle prestazioni del modello, sia in termini di accuratezza globale che di capacità di differenziare correttamente le due classi (positivi e negativi).
+
 
 ### **5. Visualizzazione dei Risultati**
 
