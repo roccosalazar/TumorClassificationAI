@@ -14,14 +14,18 @@ def map_validation_data(validation_data):
 
     Returns:
         list of tuples: Una nuova lista con i valori mappati.
-    """
+   
+    utile perchèi valori delle classi devono essere normalizzati in modo che 
+    l'algoritmo lavori correttamente con i dati
+     """
     mapped_validation_data = [
         (
             [1 if x == 4 else 0 for x in y_real],  # Mappa y_real
             [1 if x == 4 else 0 for x in y_pred]   # Mappa y_pred
         )
         for y_real, y_pred in validation_data  # Applica la trasformazione a ogni coppia
-    ]
+    ] 
+    
     return mapped_validation_data
 
 def main():
@@ -45,6 +49,8 @@ def main():
 
     print("Dati originali:")
     print(data.head())
+    
+    """Mostra le prime 5 righe del dataset, utili per verificare che il caricamento sia avvenuto correttamente"""
 
     # Step 2: Scelta dell'utente per la gestione dei valori mancanti
     print("Come vuoi gestire i valori mancanti?")
