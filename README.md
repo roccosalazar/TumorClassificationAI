@@ -132,33 +132,7 @@ Il progetto utilizza diverse metriche per valutare le prestazioni del modello di
 Queste metriche forniscono una valutazione completa delle prestazioni del modello, sia in termini di accuratezza globale che di capacità di differenziare correttamente le due classi (positivi e negativi).
 
 
-### **5. Visualizzazione dei Risultati**
-
-Il programma fornisce due modalità principali per analizzare i risultati:
-
-1. **File di Output**
-   - Le metriche calcolate vengono salvate in un file Excel denominato `metrics_output.xlsx`, contenente:
-     - Accuracy
-     - Sensitivity
-     - Specificity
-     - Geometric Mean
-   - Questo file consente un'analisi dettagliata e persistente dei risultati.
-
-2. **Grafici Esplicativi**
-   - I risultati vengono rappresentati graficamente per fornire una visione intuitiva delle prestazioni del modello.
-   - I grafici includono metriche come Accuracy, Sensitivity e Specificity, e vengono generati automaticamente al termine dell'esecuzione.
-
-**Esempio di Output**
-
-     - `Accuracy Rate`: Percentuale di predizioni corrette rispetto al totale.
-     - `Error Rate`: Percentuale di predizioni errate rispetto al totale.
-     - `Sensitivity`: Capacità del modello di identificare correttamente i casi positivi.
-     - `Specificity`: Capacità del modello di identificare correttamente i casi negativi.
-     - `Geometric Mean`: Misura l'equilibrio tra Sensitivity e Specificity.
-     - `All the above` : Tutte le precedenti.
-
-## Visualizzazione e Interpretazione dei Risultati
-### **Visualizzazione e Salvataggio dei Risultati**
+### **5.Visualizzazione e Salvataggio dei Risultati**
 
 I risultati delle predizioni del modello verranno automaticamente salvati in un file Excel denominato `metrics_output.xlsx`. Questo file include metriche di performance come Accuracy, Sensitivity, Specificity e Geometric Mean, utili per analisi successive. Inoltre, verrà generato un grafico a barre per rappresentare visivamente le metriche.
 
