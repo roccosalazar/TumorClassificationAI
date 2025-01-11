@@ -63,7 +63,7 @@ Il programma richiede un file CSV contenente il dataset da analizzare. Durante l
 Se il dataset viene caricato correttamente, verranno mostrate le prime righe,altrimenti, in caso di errori, il programma restituisce un messaggio e interrompe l'esecuzione se i dati non sono utilizzabili.
 
 
-3. ### **3. Configurazione Interattiva**
+ ### **3. Configurazione Interattiva**
 
 Durante l'esecuzione, il programma permette di configurare diverse fasi del processo attraverso opzioni interattive:
 
