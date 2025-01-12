@@ -20,13 +20,14 @@ class RandomSubsampling(ValidationStrategy):
         self.n_iter = n_iter
         self.test_size = test_size
 
-    def generate_splits(self, data: pd.DataFrame, labels: pd.Series) -> list[tuple[list[int], list[int]]]:
+    def generate_splits(self, data: pd.DataFrame, labels: pd.Series, k=3) -> list[tuple[list[int], list[int]]]:
         """
         Genera più divisioni randomiche del dataset e restituisce una lista di tuple.
 
         Args:
             data (pd.DataFrame): Le feature del dataset.
             labels (pd.Series): Le etichette del dataset.
+            k (int): Numero di vicini per il KNN (default 3).
 
         Returns:
             list[tuple[list[int], list[int]]]: Lista di tuple (y_real, y_pred).
@@ -46,7 +47,7 @@ class RandomSubsampling(ValidationStrategy):
             train_labels, test_labels = labels.iloc[train_indices], labels.iloc[test_indices]
             
             # Addestramento e predizione
-            knn = KNNClassifier(k=3)
+            knn = KNNClassifier(k)
             knn.fit(train_data, train_labels)
             predictions = knn.predict_batch(test_data)
             

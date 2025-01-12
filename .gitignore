@@ -6,6 +6,11 @@ __pycache__/
 # MacOS
 .DS_Store
 
+# VSCode e altri files
+.vscode/
+*.xlsx 
+.idea/
+
 # C extensions
 *.so
 

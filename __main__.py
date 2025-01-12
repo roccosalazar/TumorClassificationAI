@@ -137,17 +137,25 @@ def main():
         print(f"Errore nei parametri di validazione: {e}")
         exit()
 
+    # Scelta di k per il KNN
+    print("Scegli il valore di k per il KNN (default 3):")
+    k_input = input("Inserisci il valore di k: ").strip()
+    try:
+        k = int(k_input) if k_input else 3
+    except ValueError:
+        print("Valore di k non valido. Utilizzo k=3 di default.")
+        k = 3
+
     # Generazione delle divisioni
     print(f"Generazione delle divisioni utilizzando la strategia: {strategy.__class__.__name__}...")
-    validation_data = strategy.generate_splits(features, labels)
+    validation_data = strategy.generate_splits(features, labels, k)
 
     # Mappa i valori 2 -> 0 e 4 -> 1 per le etichette reali e predette per calcolare le metriche
     mapped_validation_data = map_validation_data(validation_data)
 
     # Verifica i dati trasformati
     print("Validation Data Originale:", validation_data)
-    print("Validation Data Binaria:", mapped_validation_data)
-
+    
     # Creazione dell'oggetto PerformanceMetricsVisualizer
     visualizer = PerformanceMetricsVisualizer(mapped_validation_data)
 

@@ -15,7 +15,7 @@ class Holdout(ValidationStrategy):
             raise ValueError("test_size deve essere compreso tra 0 e 1.")
         self.test_size = test_size
 
-    def generate_splits(self, data: pd.DataFrame, labels: pd.Series) -> list[tuple[list[int], list[int]]]:
+    def generate_splits(self, data: pd.DataFrame, labels: pd.Series, k=3) -> list[tuple[list[int], list[int]]]:
         """
         Divide il dataset in set di training e test e restituisce una lista di tuple (y_real, y_pred).
         """
@@ -34,7 +34,7 @@ class Holdout(ValidationStrategy):
         train_labels, test_labels = labels.iloc[train_indices], labels.iloc[test_indices]
         
         # Addestramento e predizione
-        knn = KNNClassifier(k=3)
+        knn = KNNClassifier(k)
         knn.fit(train_data, train_labels)
         predictions = knn.predict_batch(test_data)
         
