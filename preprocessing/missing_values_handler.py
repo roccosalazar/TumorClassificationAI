@@ -17,8 +17,9 @@ class MissingValuesHandler:
             pd.DataFrame: Dataset con colonne numeriche convertite in float.
         """
         for column in data.columns:
+            # Converte in float forzatamente
             try:
-                data[column] = pd.to_numeric(data[column], errors='coerce')
+                data[column] = pd.to_numeric(data[column], errors='coerce').astype('float64')
             except ValueError:
                 pass
         return data
