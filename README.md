@@ -26,14 +26,17 @@ Il dataset `version_1.csv` utilizzato in questo progetto è fondamentale per l'a
 - `Uniformity of Cell Shape`: Uniformità della forma delle cellule, importante per identificare alterazioni morfologiche.
 - `Bare Nucleix_wrong`: Nuclei scoperti (probabilmente un errore di digitazione, riferito a "Bare Nuclei").
   
-- **Anteprima del Dataset**: Le prime righe del dataset sono le seguenti:
- | Blood Pressure | Mitoses | Sample Code Number | Normal Nucleoli | Single Epithelial Cell Size | Uniformity of Cell Size | Clump Thickness | Heart Rate | Marginal Adhesion | Bland Chromatin | Class Type | Uniformity of Cell Shape | Bare Nucleix |
+
+### **Anteprima del Dataset**
+
+| Blood Pressure | Mitoses | Sample Code Number | Normal Nucleoli | Single Epithelial Cell Size | Uniformity of Cell Size | Clump Thickness | Heart Rate | Marginal Adhesion | Bland Chromatin | Class Type | Uniformity of Cell Shape | Bare Nucleix |
 |----------------|---------|--------------------|-----------------|----------------------------|-------------------------|-----------------|------------|-------------------|-----------------|------------|--------------------------|--------------|
 | 95             | 1       | 1000025.0         | 1               | 2.0                        | 1.0                     | 5.0             | 63         | 1.0               | 3.0             | 2.0        | 1.0                      | 1.0          |
 | 100            | 1       | 1002945.0         | 2               | 7.0                        | 4.0                     | 5.0             | 66         | 5.0               | 3.0             | 2.0        | 4.0                      | 10.0         |
 | 112            | 1       | 1015425.0         | 1               | 2.0                        | NaN                     | NaN             | 72         | 1.0               | 3.0             | NaN        | 1.0                      | 2.0          |
 | 99             | 1       | 1016277.0         | 7               | 3.0                        | 8.0                     | 6.0             | 98         | 1.0               | 3.0             | 2.0        | 8.0                      | 4.0          |
 | 122            | 1       | 1017023.0         | 1               | 2.0                        | 1.0                     | 4.0             | 66         | 3.0               | 3.0             | 2.0        | 1.0                      | 1.0          |
+
 # **File Principale: main.py**
 ## **Descrizione Generale**
 Il file `main.py` è il cuore del progetto. Coordina l'intero flusso di lavoro, dalla lettura del dataset all'elaborazione dei dati, dalla classificazione alla visualizzazione dei risultati. Questo script è progettato per essere interattivo e offre molteplici opzioni configurabili.
