@@ -71,9 +71,6 @@ L'utente può scegliere una strategia di validazione per dividere i dati in set 
 Il programma utilizza il classificatore **k-Nearest Neighbors (k-NN)** per distinguere tumori benigni e maligni. La fase di classificazione include:
 1. **Preparazione dei Dati**
    - Le feature e le etichette vengono separate.
-   - Le etichette nella colonna `classtype_v1` vengono trasformate in formato binario:
-     - **2 → 0**: Tumore benigno.
-     - **4 → 1**: Tumore maligno.
 2. **Addestramento e Validazione**
    - Il classificatore k-NN viene addestrato sui dati di training e testato sui dati di test, in base alla strategia di validazione scelta:
      - **Holdout**
