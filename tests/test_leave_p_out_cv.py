@@ -18,13 +18,13 @@ class TestLeavePOutCV(unittest.TestCase):
         """
         Testa il funzionamento di base di generate_splits con p=2.
         """
-        leave_p_out = LeavePOutCV(p=2)
+        leave_p_out = LeavePOutCV(p=2, n_combinations=10)  # Imposta n_combinations
         results = leave_p_out.generate_splits(self.data, self.labels)
 
         # Verifica che il risultato sia una lista
         self.assertIsInstance(results, list)
-        # Verifica che il numero di combinazioni sia corretto (C(4, 2) = 6)
-        self.assertEqual(len(results), 6)
+        # Verifica che il numero di combinazioni sia uguale a n_combinations
+        self.assertEqual(len(results), 10)
 
         # Verifica che ogni elemento sia una tupla
         for y_real, y_pred in results:
@@ -33,19 +33,19 @@ class TestLeavePOutCV(unittest.TestCase):
 
     def test_generate_splits_small_p(self):
         """
-        Testa generate_splits con p=1 (Leave-One-Out).
+        Testa generate_splits con p=1 (Leave-One-Out) e un numero fisso di combinazioni.
         """
-        leave_p_out = LeavePOutCV(p=1)
+        leave_p_out = LeavePOutCV(p=1, n_combinations=4)  # Imposta n_combinations a 4
         results = leave_p_out.generate_splits(self.data, self.labels)
 
-        # Verifica che il numero di combinazioni sia corretto (C(4, 1) = 4)
+        # Verifica che il numero di combinazioni sia uguale a n_combinations
         self.assertEqual(len(results), 4)
 
     def test_generate_splits_large_p(self):
         """
         Testa generate_splits con p uguale al numero di campioni.
         """
-        leave_p_out = LeavePOutCV(p=4)  # Numero totale di campioni = 4
+        leave_p_out = LeavePOutCV(p=4, n_combinations=10)  # Numero totale di campioni = 4
         with self.assertRaises(ValueError):
             leave_p_out.generate_splits(self.data, self.labels)
 
@@ -66,7 +66,7 @@ class TestLeavePOutCV(unittest.TestCase):
         data = pd.DataFrame(columns=["feature1", "feature2"])
         labels = pd.Series(dtype=int)
 
-        leave_p_out = LeavePOutCV(p=1)
+        leave_p_out = LeavePOutCV(p=1, n_combinations=10)
         results = leave_p_out.generate_splits(data, labels)
 
         # Il risultato deve essere una lista vuota
