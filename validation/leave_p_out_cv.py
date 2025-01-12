@@ -20,17 +20,6 @@ class LeavePOutCV(ValidationStrategy):
         self.n_combinations = n_combinations
 
     def generate_splits(self, data: pd.DataFrame, labels: pd.Series, k=3) -> list[tuple[list[int], list[int]]]:
-        """
-        Genera combinazioni Leave-P-Out casuali e restituisce una lista di tuple.
-
-        Args:
-            data (pd.DataFrame): Le feature del dataset.
-            labels (pd.Series): Le etichette del dataset.
-            k (int): Numero di vicini per il KNN (default 3).
-
-        Returns:
-            list[tuple[list[int], list[int]]]: Lista di tuple (y_real, y_pred).
-        """
         n_samples = len(data)
 
         # Se il dataset è vuoto, restituiamo direttamente una lista vuota

@@ -21,17 +21,6 @@ class RandomSubsampling(ValidationStrategy):
         self.test_size = test_size
 
     def generate_splits(self, data: pd.DataFrame, labels: pd.Series, k=3) -> list[tuple[list[int], list[int]]]:
-        """
-        Genera più divisioni randomiche del dataset e restituisce una lista di tuple.
-
-        Args:
-            data (pd.DataFrame): Le feature del dataset.
-            labels (pd.Series): Le etichette del dataset.
-            k (int): Numero di vicini per il KNN (default 3).
-
-        Returns:
-            list[tuple[list[int], list[int]]]: Lista di tuple (y_real, y_pred).
-        """
         results = []
         for _ in range(self.n_iter):
             n_samples = len(data)

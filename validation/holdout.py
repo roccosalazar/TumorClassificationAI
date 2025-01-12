@@ -16,9 +16,6 @@ class Holdout(ValidationStrategy):
         self.test_size = test_size
 
     def generate_splits(self, data: pd.DataFrame, labels: pd.Series, k=3) -> list[tuple[list[int], list[int]]]:
-        """
-        Divide il dataset in set di training e test e restituisce una lista di tuple (y_real, y_pred).
-        """
         n_samples = len(data)
         n_test = int(n_samples * self.test_size)
         if n_test == n_samples:
