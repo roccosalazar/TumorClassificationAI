@@ -43,11 +43,26 @@ Il file `main.py` è il cuore del progetto. Coordina l'intero flusso di lavoro, 
 Per eseguire il codice di questo progetto, seguire questi passi:
 1. **Installazione delle Dipendenze**: Prima di eseguire il programma, è necessario installare le dipendenze. Questo può essere fatto eseguendo il comando `pip install -r requirements.txt` nella directory principale del progetto. Questo comando installerà tutte le librerie necessarie, come numpy, pandas, matplotlib, etc. 
 2. **Caricamento del Dataset**: 
-Il programma richiede un file CSV contenente il dataset da analizzare. Durante l'esecuzione, verrà chiesto di specificare il percorso del file. Se non viene fornito alcun percorso o il file non è valido, il programma utilizzerà il dataset predefinito `data/version_1.csv`.
-#### **Requisiti del Dataset**
-- Il file deve essere in formato CSV.
-- Deve contenere una colonna denominata `classtype_v1` per rappresentare le etichette (tumori benigni o maligni).
-Se il dataset viene caricato correttamente, verranno mostrate le prime righe,altrimenti, in caso di errori, il programma restituisce un messaggio e interrompe l'esecuzione se i dati non sono utilizzabili.
+Il programma è progettato per analizzare dataset provenienti da diversi formati di file. Per garantire il corretto funzionamento, il dataset deve soddisfare i seguenti requisiti:
+### 1. Formato supportato
+- Il file deve essere in uno dei seguenti formati:
+  - `.csv`
+  - `.xlsx` (Excel)
+  - `.json`
+  - `.txt` (con delimitatore `,`)
+  - `.tsv` (con delimitatore `\t`)
+- Se il formato del file non è tra quelli supportati, verrà generato un errore.
+### 2. Struttura del dataset
+- Deve contenere una colonna denominata **`Sample code number`**. Questa colonna sarà utilizzata per:
+  - Identificare ogni campione univocamente.
+  - Rimuovere eventuali duplicati basati su questa colonna.
+  - Impostare questa colonna come indice del DataFrame.
+### 3. Caricamento del dataset
+- Durante l'esecuzione del programma, l'utente deve fornire il percorso del file contenente il dataset.
+- Se non viene fornito alcun percorso o il file specificato non è valido, verrà utilizzato il dataset predefinito: `data/version_1.csv`.
+### 4. Pulizia del dataset
+- Dopo il caricamento, i duplicati nella colonna **`Sample code number`** verranno automaticamente rimossi.
+- Il dataset risultante sarà indicizzato in base alla colonna **`Sample code number`**.
 ### **3. Configurazione Interattiva**
 Durante l'esecuzione, il programma permette di configurare diverse fasi del processo attraverso opzioni interattive:
 #### **Gestione dei Valori Mancanti**
@@ -68,7 +83,14 @@ L'utente può scegliere una strategia di validazione per dividere i dati in set 
 2. **Random Subsampling**: Esegue più divisioni casuali del dataset. L'utente può specificare il numero di iterazioni (default: 10) e la percentuale di test (default: 20%).
 3. **Leave-p-Out Cross Validation**: Esclude `p` campioni dal set di training in ogni iterazione. Il valore di `p` può essere specificato (default: 2).
 ### **4. Classificazione**
-Il programma utilizza il classificatore **k-Nearest Neighbors (k-NN)** per distinguere tumori benigni e maligni. La fase di classificazione include:
+Il programma utilizza il classificatore **k-Nearest Neighbors (k-NN)** per distinguere tumori benigni e maligni.### **Scelta di \( k \) per il Classificatore k-NN**
+Durante l'esecuzione del programma, l'utente può configurare il parametro \( k \), che rappresenta il numero di vicini da considerare per il classificatore k-Nearest Neighbors (k-NN). 
+#### **Dettagli sulla Configurazione**
+- Il valore di \( k \) determina quante osservazioni vicine verranno utilizzate per fare la classificazione.
+- Se l'utente non specifica un valore, verrà utilizzato il valore di default: \( k = 3 \).
+#### **Input dell'Utente**
+Il programma richiederà di inserire il valore di \( k \) con il seguente messaggio:
+ La fase di classificazione include:
 1. **Preparazione dei Dati**
    - Le feature e le etichette vengono separate.
 2. **Addestramento e Validazione**
