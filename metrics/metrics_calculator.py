@@ -4,7 +4,7 @@ import numpy as np
 class MetricsCalculator:
     def __init__(self):
         """
-        Inizializza la classe MetricsCalculator.
+        Inizializza  la classe MetricsCalculator tramite il costruttore.
         """
         pass
 
@@ -28,7 +28,7 @@ class MetricsCalculator:
             "Area Under Curve": [],
         }
 
-        # Calcola metriche per ogni coppia
+        # Calcola metriche per ogni coppia e aggiungi i valori alle liste aggregate
         for y_real, y_pred in input_data:
             tp, tn, fp, fn = self._confusion_matrix(y_real, y_pred)
             aggregated_metrics["Accuracy Rate"].append(self._accuracy_rate(tp, tn, fp, fn))
@@ -38,7 +38,7 @@ class MetricsCalculator:
             aggregated_metrics["Geometric Mean"].append(self._geometric_mean(tp, tn, fp, fn))
             aggregated_metrics["Area Under Curve"].append(self._area_under_curve(tp, tn, fp, fn))
 
-        # Restituisce le metriche come media delle iterazioni
+        # Restituisce le metriche come media delle iterazioni tramite la seguente list comprehension
         return {key: sum(values) / len(values) for key, values in aggregated_metrics.items()}
 
     def _confusion_matrix(self, y_real: List[int], y_pred: List[int]) -> Tuple[int, int, int, int]:

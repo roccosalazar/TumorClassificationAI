@@ -37,5 +37,8 @@ class Holdout(ValidationStrategy):
         
         # Costruisce la lista di tuple (y_real, y_pred)
         results = [(test_labels.tolist(), predictions.tolist())]
+
+        """Il primo elemento (test_labels.tolist()) è una lista delle etichette reali del set di test.
+        Il secondo elemento (predictions.tolist()) è una lista delle etichette previste dal modello."""
         
         return results
