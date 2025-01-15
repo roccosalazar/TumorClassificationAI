@@ -41,6 +41,10 @@ class PerformanceMetricsVisualizer:
         metrics_df.to_excel(filename, index=False, engine="openpyxl")
         print(f"Metriche salvate in {filename}")
 
+        """filename: Nome del file in cui salvare i dati,
+        Non include l'indice del DataFrame nel file Excel,
+        Specifica che viene utilizzato il motore openpyxl per scrivere il file"""
+
     def _plot_metrics(self, metrics: Dict[str, float]) -> None:
         """
         Plotta le metriche in un grafico a barre.
