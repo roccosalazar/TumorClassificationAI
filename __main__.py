@@ -138,8 +138,7 @@ def main():
         exit()
 
     # Scelta di k per il KNN
-    print("Scegli il valore di k per il KNN (default 3):")
-    k_input = input("Inserisci il valore di k: ").strip()
+    k_input = input("Scegli il valore di k per il KNN (default 3): ").strip()
     try:
         k = int(k_input) if k_input else 3
     except ValueError:
