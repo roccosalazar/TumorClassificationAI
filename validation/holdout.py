@@ -17,7 +17,7 @@ class Holdout(ValidationStrategy):
 
     def generate_splits(self, data: pd.DataFrame, labels: pd.Series, k=3) -> list[tuple[list[int], list[int]]]:
         n_samples = len(data)
-        n_test = int(n_samples * self.test_size)
+        n_test = int(n_samples * self.test_size) # Casting a intero per ottenere un valore intero
         if n_test == n_samples:
             raise ValueError("Il set di training è vuoto. Riduci il valore di test_size.")
         
