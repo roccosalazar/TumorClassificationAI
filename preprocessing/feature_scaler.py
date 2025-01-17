@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 from .data_parser import ParserFactory
-from .missing_values_handler import MissingValuesFactory
+from .missing_values_handler import MissingValuesStrategyManager
 
 class FeatureScaler:
     """
@@ -74,24 +74,3 @@ class FeatureScalerStrategyManager:
             return FeatureScaler.standardize(data, exclude_columns)
         else:
             raise ValueError("Strategia non valida. Scegli tra 'normalize' o 'standardize'.")
-
-if __name__ == "__main__":
-    # Esempio di utilizzo della classe FeatureScalerFactory
-    file_path = "data/version_1.csv"
-    parser = ParserFactory.get_parser(file_path)
-    data = parser.parse(file_path)
-    data = MissingValuesFactory.handle_missing_values('median', data)
-
-    print("Original Data:")
-    print(data.head())
-
-    # Escludere colonne specifiche dallo scaling
-    exclude_columns = ['Sample code number', 'classtype_v1']
-
-    # Applicare diverse strategie di scaling usando la factory
-    strategies = ['normalize', 'standardize']
-
-    for strategy in strategies:
-        print(f"\nStrategy: {strategy}")
-        scaled_data = FeatureScalerStrategyManager.scale_features(strategy, data, exclude_columns)
-        print(scaled_data.head())
